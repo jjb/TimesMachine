@@ -25,7 +25,11 @@ class DemandFeedia < Grape::API
           escaped_url + '&refType=archive&OC=100101'
         a[:buy_link] = buy_link
       end
-      articles
+
+      { :articles => articles,
+        :buy_bundle_link =>
+          (articles.count == 10 ? articles.first[:buy_link].sub('100101', '100102') : nil)
+      }
     end
   end
 
