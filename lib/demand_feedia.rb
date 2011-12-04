@@ -15,6 +15,7 @@ class DemandFeedia < Grape::API
         "begin_date=#{begin_date}&" +
         "end_date=#{end_date}&" +
         'rank=closest&' +
+        # 'fields=small_image_url%2Csmall_image%2Cbody%2Ctitle%2Curl&' +
         'api-key=3761c354783251ab639777f67fdcae98:5:65301959'
 
       articles = result["results"]
