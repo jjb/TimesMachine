@@ -6,6 +6,8 @@ gem 'puma'
 
 gem 'grape'
 
-gem 'http'
+gem "typhoeus"
 
 gem "foreman"
+
+gem "pry"

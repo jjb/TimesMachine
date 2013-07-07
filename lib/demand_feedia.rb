@@ -1,5 +1,5 @@
 require 'grape'
-require 'http'
+require "typhoeus"
 require 'json'
 require 'cgi'
 
@@ -9,7 +9,7 @@ class DemandFeedia < Grape::API
       year = params[:year].to_i
       begin_date = "#{year - 1}0701"
       end_date   = "#{year + 1}0631"
-      result = HTTP.get 'http://api.nytimes.com/svc/search/v1/article?format=json' +
+      url = 'http://api.nytimes.com/svc/search/v1/article?format=json' +
         '&query=' + params[:terms] +
         '+fee%3A%22Y%22&' +
         "begin_date=#{begin_date}&" +
@@ -18,7 +18,10 @@ class DemandFeedia < Grape::API
         # 'fields=small_image_url%2Csmall_image%2Cbody%2Ctitle%2Curl&' +
         'api-key=3761c354783251ab639777f67fdcae98:5:65301959'
 
-      articles = result["results"]
+      result = Typhoeus.get url
+      json = result.response_body
+      articles = JSON.parse(json)["results"]
+
       articles.each do |a|
         escaped_url = CGI.escape(a['url'])
         buy_link = 
