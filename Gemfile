@@ -1,7 +1,11 @@
 source "https://rubygems.org"
 
-gem 'thin'
+ruby "2.0.0"
+
+gem 'puma'
 
 gem 'grape'
 
 gem 'http'
+
+gem "foreman"
