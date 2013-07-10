@@ -6,9 +6,10 @@ gem 'puma'
 
 gem "sinatra"
 gem "sinatra-contrib"
-
-gem "typhoeus"
+gem "sinatra-jsonp"
 
 gem "foreman"
 
 gem "pry"
+
+gem "nytimes-articles"

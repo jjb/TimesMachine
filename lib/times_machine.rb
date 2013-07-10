@@ -1,10 +1,15 @@
+require "pry"
 require 'sinatra'
 require "sinatra/json"
-
-require "typhoeus"
+require "sinatra/jsonp"
 
 require 'json'
 require 'cgi'
+
+require "nytimes_articles"
+
+include Nytimes::Articles
+Base.api_key =  "3761c354783251ab639777f67fdcae98:5:65301959"
 
 set :json_encoder, :to_json
 
@@ -12,25 +17,19 @@ get '/articles/about/:terms/around/:year' do
   year = params[:year].to_i
   begin_date = "#{year - 1}0701"
   end_date   = "#{year + 1}0631"
-  url = 'http://api.nytimes.com/svc/search/v1/article?format=json' +
-    '&query=' + params[:terms] +
-    '+fee%3A%22Y%22&' +
-    "begin_date=#{begin_date}&" +
-    "end_date=#{end_date}&" +
-    'rank=closest&' +
-    # 'fields=small_image_url%2Csmall_image%2Cbody%2Ctitle%2Curl&' +
-    'api-key=3761c354783251ab639777f67fdcae98:5:65301959'
 
-  result = Typhoeus.get url
-  json = result.response_body
-  articles = JSON.parse(json)["results"]
+  result = Article.search(
+    "#{params[:terms]} +fee:Y",
+    begin_date: begin_date, end_date: end_date, rank: :closest
+  )
 
-  articles.each do |a|
-    escaped_url = CGI.escape(a['url'])
-    buy_link = 
+  articles = []
+  result.each do |article|
+    escaped_url = CGI.escape(article.url)
+    buy_link =
       'https://myaccount.nytimes.com/mem/purchase/gateway/checkout.html?url=' +
       escaped_url + '&refType=archive&OC=100101'
-    a[:buy_link] = buy_link
+    articles << {buy_link: buy_link, title: article.title, body: article.body, byline: article.byline, url: article.url}
   end
 
   buy_bundle_link =
@@ -40,5 +39,5 @@ get '/articles/about/:terms/around/:year' do
       nil
     end
 
-  json({ articles: articles, buy_bundle_link: buy_bundle_link})
+  jsonp({ articles: articles, buy_bundle_link: buy_bundle_link})
 end

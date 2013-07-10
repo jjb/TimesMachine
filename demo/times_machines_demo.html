@@ -1,0 +1,35 @@
+<html>
+<head>
+  <title>Times Machine Demo</title>
+  <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+  <script src="http://cloud.github.com/downloads/wycats/handlebars.js/handlebars-1.0.rc.1.min.js"></script>
+</head>
+<body>
+
+<h2>Here are the results:</h2>
+<ul id="results">
+  ...loading...
+</ul>
+
+<script id="result-template" type="text/x-handlebars-template">
+  <li>
+    <h3><a href="{{url}}">{{title}}</a> by {{byline}}</h3>
+    <p>{{body}}...<a href="{{buy_link}}">buy this article</a></p>
+  </li>
+</script>
+<script>
+  var source   = $("#result-template").html();
+  var template = Handlebars.compile(source);
+  var results = $("#results");
+
+  jQuery.getJSON("http://localhost:3000/articles/about/food/around/1983?callback=?", function(json, textStatus) {
+    results.html("");
+    $(json.articles).each(function(index, val) {
+      html = template(val);
+      results.append(html);
+      console.log( val);
+    });
+  });
+</script>
+</body>
+</html>

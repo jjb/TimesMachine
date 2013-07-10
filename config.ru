@@ -1,3 +1,3 @@
-require ::File.expand_path('../lib/demand_feedia',  __FILE__)
+require ::File.expand_path('../lib/times_machine',  __FILE__)
 
 run Sinatra::Application
