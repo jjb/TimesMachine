@@ -4,7 +4,8 @@ ruby "2.0.0"
 
 gem 'puma'
 
-gem 'grape'
+gem "sinatra"
+gem "sinatra-contrib"
 
 gem "typhoeus"
 
